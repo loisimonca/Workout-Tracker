@@ -1,6 +1,8 @@
 // 1. Require Express
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose");
+
 // 2. Create an instance of Express
 const app = express();
 // 3. Set the PORT

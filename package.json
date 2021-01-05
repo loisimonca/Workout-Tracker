@@ -20,6 +20,7 @@
     "homepage": "https://github.com/jonathanjwatson/donut-shop#readme",
     "dependencies": {
         "express": "^4.17.1",
+        "mongoose": "^5.11.10",
         "path": "^0.12.7"
     }
 }

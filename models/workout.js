@@ -6,6 +6,7 @@ const workoutSchema = new Schema({
   type: {
     type: String,
     enum: ["Resistance", "Cardio"],
+    required: "Enter a type of workout",
   },
   name: {
     type: String,
@@ -45,6 +46,6 @@ const workoutSchema = new Schema({
   },
 });
 
-const Transaction = mongoose.model("Workout", workoutSchema);
+const Workout = mongoose.model("Workout", workoutSchema);
 
 module.exports = Transaction;

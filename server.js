@@ -12,36 +12,32 @@ const PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout-app", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
+
+const connection = mongoose.connection;
+
+connection.on("connected", () => {
+  console.log("Mongoose connected successfully");
+});
+
+connection.on("error", (err) => {
+  console.log("Mongoose connected error: " + err);
+});
 // VIEW ROUTES
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/views/index.html"));
 });
-
 // API ROUTES
 app.get("/api/config", (req, res) => {
   res.json({
     success: true,
   });
 });
-
-const donuts = [
-  {
-    name: "glazed",
-    price: "$0.99",
-  },
-  {
-    name: "Cereal Killer",
-    price: "$3.99",
-  },
-  {
-    name: "Lemon Filled",
-    price: "$1.99",
-  },
-  {
-    name: "Bear Claw",
-    price: "$4.99",
-  },
-];
 
 app.get("/api/donuts", (req, res) => {
   res.json(donuts);

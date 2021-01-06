@@ -1,6 +1,7 @@
 // 1. Require Express
 const express = require("express");
 const path = require("path");
+const mongojs = require("mongojs");
 const mongoose = require("mongoose");
 
 // 2. Create an instance of Express
@@ -52,7 +53,7 @@ app.get("/api/workouts", (req, res) => {
   });
 });
 
-app.get("/api/workouts/:name", (req, res) => {
+app.get("/api/workouts/:id", (req, res) => {
   for (let i = 0; i < donuts.length; i++) {
     if (donuts[i].name === req.params.name) {
       return res.json(donuts[i]);
@@ -64,6 +65,21 @@ app.post("/api/workouts", (req, res) => {
   db.Workout.create(req.body).then((newWorkout) => {
     res.json(newWorkout);
   });
+});
+
+app.delete("/api/workouts/:id", (req, res) => {
+  db.Workout.deleteOne(
+    {
+      _id: mongojs.ObjectID(req.params.id),
+    },
+    (error, data) => {
+      if (error) {
+        res.send(error);
+      } else {
+        res.send(data);
+      }
+    }
+  );
 });
 
 // 4. Listen on the PORT.

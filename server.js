@@ -10,7 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const db = require("./models");
-// const workoutSchema = require("./models/workout");
+const { Workout } = require("./models");
+const workoutSchema = require("./models/workout");
 
 // 5. Add middleware
 app.use(express.urlencoded({ extended: true }));
@@ -54,11 +55,12 @@ app.get("/api/workouts", (req, res) => {
 });
 
 app.get("/api/workouts/:id", (req, res) => {
-  for (let i = 0; i < donuts.length; i++) {
-    if (donuts[i].name === req.params.name) {
-      return res.json(donuts[i]);
-    }
-  }
+  // const workoutAr = Workout.keys(workoutSchema);
+  // for (let i = 0; i < workoutAr.length; i++) {
+  //   if (workoutAr[i].name === req.body) {
+  //     return res.json(workoutAr[i]);
+  //   }
+  // }
 });
 
 app.post("/api/workouts", (req, res) => {

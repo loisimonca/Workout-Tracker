@@ -8,6 +8,9 @@ const app = express();
 // 3. Set the PORT
 const PORT = process.env.PORT || 8080;
 
+const db = require("./models");
+// const workoutSchema = require("./models/workout");
+
 // 5. Add middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -39,8 +42,12 @@ app.get("/api/config", (req, res) => {
   });
 });
 
-app.get("/api/donuts", (req, res) => {
-  res.json(donuts);
+// console.log(workoutSchema);
+
+app.get("/api/workouts", (req, res) => {
+  db.Workout.find().then((foundWorkouts) => {
+    res.json(foundWorkouts);
+  });
 });
 
 app.get("/api/donuts/:name", (req, res) => {
@@ -51,9 +58,10 @@ app.get("/api/donuts/:name", (req, res) => {
   }
 });
 
-app.post("/api/donuts", (req, res) => {
-  donuts.push(req.body);
-  res.json(donuts);
+app.post("/api/workouts", (req, res) => {
+  db.Workout.create(req.body).then((newWorkout) => {
+    res.json(newWorkout);
+  });
 });
 
 // 4. Listen on the PORT.

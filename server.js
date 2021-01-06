@@ -15,6 +15,8 @@ const db = require("./models");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(express.static(__dirname + "/public"));
+
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout-app", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -33,7 +35,7 @@ connection.on("error", (err) => {
 });
 // VIEW ROUTES
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/index.html"));
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 // API ROUTES
 app.get("/api/config", (req, res) => {
@@ -50,7 +52,7 @@ app.get("/api/workouts", (req, res) => {
   });
 });
 
-app.get("/api/donuts/:name", (req, res) => {
+app.get("/api/workouts/:name", (req, res) => {
   for (let i = 0; i < donuts.length; i++) {
     if (donuts[i].name === req.params.name) {
       return res.json(donuts[i]);

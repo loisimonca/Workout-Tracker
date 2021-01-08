@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const db = require("./models");
-const { Workout } = require("./models");
+// const { Workout } = require("./models");
 const workoutSchema = require("./models/workout");
 
 // 5. Add middleware
@@ -39,6 +39,10 @@ connection.on("error", (err) => {
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
+app.get("/exercise", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/exercise.html"));
+});
+
 // API ROUTES
 app.get("/api/config", (req, res) => {
   res.json({

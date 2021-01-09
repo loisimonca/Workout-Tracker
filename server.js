@@ -1,10 +1,8 @@
 // 1. Require Express
 const express = require("express");
 const path = require("path");
-const mongojs = require("mongojs");
 const mongoose = require("mongoose");
 
-let date_ob = new Date();
 // 2. Create an instance of Express
 const app = express();
 // 3. Set the PORT

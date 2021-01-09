@@ -48,11 +48,6 @@ app.get("/stats", (req, res) => {
 });
 
 // API ROUTES
-app.get("/api/config", (req, res) => {
-  res.json({
-    success: true,
-  });
-});
 
 app.get("/api/workouts/range", function (req, res) {
   db.Workout.find({})
@@ -77,12 +72,11 @@ app.get("/api/workouts", (req, res) => {
 });
 
 app.get("/api/workouts/:id", (req, res) => {
-  // const workoutAr = Workout.keys(workoutSchema);
-  // for (let i = 0; i < workoutAr.length; i++) {
-  //   if (workoutAr[i].name === req.body) {
-  //     return res.json(workoutAr[i]);
-  //   }
-  // }
+  db.Workout.find({ _id: mongojs.ObjectID(req.params.id) }).then(
+    (foundWorkouts) => {
+      res.json(foundWorkouts);
+    }
+  );
 });
 
 app.post("/api/workouts", (req, res) => {

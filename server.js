@@ -2,6 +2,7 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const mongojs = require("mongojs");
 
 // 2. Create an instance of Express
 const app = express();
@@ -48,7 +49,16 @@ app.get("/stats", (req, res) => {
 // API ROUTES
 
 app.get("/api/workouts/range", function (req, res) {
-  db.Workout.find({})
+  db.Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: {
+          $sum: "$exercises.duration",
+        },
+      },
+    },
+  ])
+    .sort({ _id: -1 })
     .limit(7)
     .then((foundWorkouts) => {
       res.json(foundWorkouts);
@@ -63,19 +73,32 @@ app.get("/api/workouts/range", function (req, res) {
     });
 });
 
+// app.get("/api/workouts", (req, res) => {
+//   db.Workout.find().then((foundWorkouts) => {
+//     res.json(foundWorkouts);
+//   });
+// });
 app.get("/api/workouts", (req, res) => {
-  db.Workout.find().then((foundWorkouts) => {
-    res.json(foundWorkouts);
+  db.Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: {
+          $sum: "$exercises.duration",
+        },
+      },
+    },
+  ]).then((foundWorkout) => {
+    res.json(foundWorkout);
   });
 });
 
-app.get("/api/workouts/:id", (req, res) => {
-  db.Workout.find({ _id: mongojs.ObjectID(req.params.id) }).then(
-    (foundWorkouts) => {
-      res.json(foundWorkouts);
-    }
-  );
-});
+// app.get("/api/workouts/:id", (req, res) => {
+//   db.Workout.find({ _id: mongojs.ObjectID(req.params.id) }).then(
+//     (foundWorkouts) => {
+//       res.json(foundWorkouts);
+//     }
+//   );
+// });
 
 app.post("/api/workouts", (req, res) => {
   db.Workout.create(req.body).then((newWorkout) => {
@@ -90,22 +113,6 @@ app.put("/api/workouts/:id", (req, res) => {
       $push: {
         exercises: req.body,
       },
-    },
-    (error, data) => {
-      if (error) {
-        res.send(error);
-      } else {
-        res.send(data);
-      }
-    }
-  );
-  console.log(req.body);
-});
-
-app.delete("/api/workouts/:id", (req, res) => {
-  db.Workout.deleteOne(
-    {
-      _id: mongojs.ObjectID(req.params.id),
     },
     (error, data) => {
       if (error) {

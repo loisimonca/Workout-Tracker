@@ -4,6 +4,7 @@ const path = require("path");
 const mongojs = require("mongojs");
 const mongoose = require("mongoose");
 
+let date_ob = new Date();
 // 2. Create an instance of Express
 const app = express();
 // 3. Set the PORT
@@ -42,6 +43,9 @@ app.get("/", (req, res) => {
 app.get("/exercise", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/exercise.html"));
 });
+app.get("/stats", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/stats.html"));
+});
 
 // API ROUTES
 app.get("/api/config", (req, res) => {
@@ -50,7 +54,21 @@ app.get("/api/config", (req, res) => {
   });
 });
 
-// console.log(workoutSchema);
+app.get("/api/workouts/range", function (req, res) {
+  db.Workout.find({})
+    .limit(7)
+    .then((foundWorkouts) => {
+      res.json(foundWorkouts);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({
+        error: true,
+        data: null,
+        message: "Failed to retrieve the combined workout range.",
+      });
+    });
+});
 
 app.get("/api/workouts", (req, res) => {
   db.Workout.find().then((foundWorkouts) => {
@@ -71,6 +89,25 @@ app.post("/api/workouts", (req, res) => {
   db.Workout.create(req.body).then((newWorkout) => {
     res.json(newWorkout);
   });
+});
+
+app.put("/api/workouts/:id", (req, res) => {
+  db.Workout.updateOne(
+    { _id: mongojs.ObjectID(req.params.id) },
+    {
+      $push: {
+        exercises: req.body,
+      },
+    },
+    (error, data) => {
+      if (error) {
+        res.send(error);
+      } else {
+        res.send(data);
+      }
+    }
+  );
+  console.log(req.body);
 });
 
 app.delete("/api/workouts/:id", (req, res) => {

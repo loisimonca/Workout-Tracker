@@ -10,7 +10,6 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const db = require("./models");
-// const { Workout } = require("./models");
 const workoutSchema = require("./models/workout");
 
 // 5. Add middleware
@@ -35,6 +34,7 @@ connection.on("connected", () => {
 connection.on("error", (err) => {
   console.log("Mongoose connected error: " + err);
 });
+
 // VIEW ROUTES
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
@@ -73,11 +73,6 @@ app.get("/api/workouts/range", function (req, res) {
     });
 });
 
-// app.get("/api/workouts", (req, res) => {
-//   db.Workout.find().then((foundWorkouts) => {
-//     res.json(foundWorkouts);
-//   });
-// });
 app.get("/api/workouts", (req, res) => {
   db.Workout.aggregate([
     {
@@ -91,14 +86,6 @@ app.get("/api/workouts", (req, res) => {
     res.json(foundWorkout);
   });
 });
-
-// app.get("/api/workouts/:id", (req, res) => {
-//   db.Workout.find({ _id: mongojs.ObjectID(req.params.id) }).then(
-//     (foundWorkouts) => {
-//       res.json(foundWorkouts);
-//     }
-//   );
-// });
 
 app.post("/api/workouts", (req, res) => {
   db.Workout.create(req.body).then((newWorkout) => {
